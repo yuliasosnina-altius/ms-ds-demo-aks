@@ -1,0 +1,1 @@
+docker run -it --rm -p 5000:5000 -e MESSAGE="Hi everybody!" python-api-demo

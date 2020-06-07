@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app-<PLACEHOLDER>
+spec:
+  selector:
+    matchLabels:
+      app: demo-<PLACEHOLDER>
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: demo-<PLACEHOLDER>
+    spec:
+      containers:
+      - name: demo-container
+        image: msdsdemoacr.azurecr.io/python-api-demo-app:0.2
+        ports:
+        - containerPort: 80
+        env:
+        - name: MESSAGE
+          value: <PLACE HOLDER FOR YOUR MESSAGE>
+        resources:
+          requests:
+            memory: "100M"
+            cpu: "0.1"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-service-<PLACEHOLDER>
+spec:
+  selector:
+    app: demo-<PLACEHOLDER>
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5000
+  type: ClusterIP
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: demo-ingress-<PLACEHOLDER>
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: demo-<PLACEHOLDER>.ef1a76493d804a16a4a2.northeurope.aksapp.io
+    http:
+      paths:
+      - backend:
+          serviceName: demo-service-<PLACEHOLDER>
+          servicePort: 80
+        path: / 
